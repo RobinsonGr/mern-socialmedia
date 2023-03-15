@@ -1,0 +1,9 @@
+POST http://127.0.0.1:3000/auth/register
+
+{
+    firstName: "Robinson",
+    lastName: "Andres",
+    email: "robinsongr9@gmail.com",
+    password: "ahjjjjjj"
+
+}
