@@ -1,4 +1,4 @@
-POST http://127.0.0.1:3000/auth/register
+GET http://127.0.0.1:7000/
 
 {
     firstName: "Robinson",

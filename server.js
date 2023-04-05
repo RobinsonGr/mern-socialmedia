@@ -10,9 +10,7 @@ import { fileURLToPath } from "url"
 import mongoose from "mongoose"
 import { register } from "./controllers/auth.js"
 import userRouter from "./routes/users.js"
-import { u, posts } from "./data/data.js"
-import User from "./models/users.js"
-import Post from "./models/posts.js"
+
 
 
 
@@ -28,7 +26,7 @@ app.use(morgan("common"))
 app.use(bodyParser.json({limit: "30mb", extended: "true"}))
 app.use(bodyParser.urlencoded({limit: "30mb", extended: "true"}))
 app.use(cors())
-app.use("assets", express.static(path.join(__dirname, "public/assets")))
+app.use("/assets", express.static(path.join(__dirname, "public/assets")))
 
 /* FILES STORAGE  */
 
@@ -43,7 +41,7 @@ const storage = multer.diskStorage({
     },
 })
 
-const upload = {storage: storage}
+const upload = multer({storage})
 
 
 app.get("/", (req, res) => {
@@ -52,7 +50,7 @@ app.get("/", (req, res) => {
 
 /* ROUTES WITH FILES */
 
-app.post("/auth/register", register)
+app.post("/auth/register", upload.single("picture"), register)
 
 /* ROUTES */
 
@@ -60,7 +58,7 @@ app.use("/users", userRouter )
 
 /* Connect to db  */
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 async function main() {
 
@@ -73,10 +71,11 @@ async function main() {
 
 
 main().then( async () => {
-    app.listen(PORT,"127.0.0.1" ,() => console.log(`The server has been connect in server the port ${PORT}`))
+    app.listen(PORT,"127.0.0.1",
+     () => console.log(`The server has been connect in server the port ${PORT}`))
 
-    await User.insertMany(u)
-    await Post.insertMany(posts)
+    // await User.insertMany(u)
+    // await Post.insertMany(posts)
 
 
 } ).catch(err => console.log(err))
